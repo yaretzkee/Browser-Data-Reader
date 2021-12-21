@@ -3,9 +3,10 @@
 One-file app that grabs data stored locally by Chromium-based browsers.
 
 # :bangbang: DISCMAIMER
-USE THIS TOOL ONLY ON ACCOUNTS YOU OWE
+USE THIS TOOL ONLY ON ACCOUNTS YOU OWE  
 Obtaining information one is not authorized to obtain is legal violation
-and as such may result in severe legal consequences. 
+and as such may result in severe legal consequences.  
+   
 This tool is only for educational purpose
 
 ## Background
