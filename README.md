@@ -23,6 +23,11 @@ why one should:
 Most often tools like this are used by the author with USB HID crafted devices
 to present how sensitive data can be stolen in matter of seconds
 
+## Requirements
+   ```cmd
+   pip install -r requirements.txt
+   ```
+
 ## How it works
 
 Run .py script w/o any arguments. Data will be dumped into 'harvest' folder.

